@@ -35,12 +35,14 @@ The board needs your WiFi and the spot to center the scope on. There are two way
 **Option A: settings file (easiest when flashing from a computer).**
 Copy `include/secrets.example.h` to `include/secrets.h`, fill in your WiFi name and password and your latitude/longitude, then build and flash. For an open network, leave the password as `""`. `secrets.h` is in `.gitignore`, so it never gets committed.
 
+The file has room for a second network with its own location (the `SECRET2_` lines), for example home and a vacation rental. At power-on the board scans, joins whichever listed network it can see (the first one if both are in range), and centers the scope on that network's location. Delete the `SECRET2_` lines if you only need one.
+
 To get coordinates: in Google Maps, long-press your location and copy the two numbers. West longitudes are negative.
 
 **Option B: phone setup page.**
 Without `secrets.h` (or if its WiFi fails), the board opens a hotspot called `SEA-TRACKER-SETUP`. Join it from your phone, open `http://192.168.4.1` (turn mobile data off if the page won't load), choose **Configure WiFi**, pick your network, and fill in latitude and longitude on the same page. Pasting both coordinates into the latitude box (`40.7128, -74.0060`) works too.
 
-To reopen the setup page later, hold a finger on the screen while plugging the board in, and keep holding for 3 seconds. A location saved on the setup page takes priority over the one in `secrets.h`.
+To reopen the setup page later, hold a finger on the screen while plugging the board in, and keep holding for 3 seconds. A location saved on the setup page takes priority over the ones in `secrets.h`, wherever the board is.
 
 ## Using it
 

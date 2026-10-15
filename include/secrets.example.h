@@ -10,3 +10,11 @@
 // West longitudes are negative (anywhere in the US starts with a minus sign).
 #define SECRET_LAT 0.0
 #define SECRET_LON 0.0
+
+// Optional second network (e.g. home and a vacation spot). The board joins
+// whichever one it can see and centers on that network's location.
+// Delete these four lines if you only need one.
+#define SECRET2_WIFI_SSID "PUT-WIFI-NAME-HERE"
+#define SECRET2_WIFI_PASS "PUT-WIFI-PASSWORD-HERE"
+#define SECRET2_LAT 0.0
+#define SECRET2_LON 0.0
