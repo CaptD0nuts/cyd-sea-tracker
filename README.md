@@ -73,6 +73,10 @@ The bottom of the panel shows the current freshness setting (`FIX < 90D`) and ho
 - The feed is an undocumented public endpoint behind OCEARCH's own tracker page and could change without notice.
 - If you fork this, change `USER_AGENT` in `include/config.h` to your own contact.
 
+## Related
+
+**Tide Display CYD** is a companion project for the same board. It draws an animated beach whose water line follows the real tide from NOAA predictions, with live waves, wind and water temperature from an NDBC buoy, the sun and moon at their real positions, and a 36-hour tide chart.
+
 ## License
 
 MIT, see [LICENSE](LICENSE). Libraries pulled in by PlatformIO (TFT_eSPI, ArduinoJson, WiFiManager, XPT2046_Touchscreen) keep their own licenses. Animal data belongs to OCEARCH.
