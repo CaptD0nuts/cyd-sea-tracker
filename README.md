@@ -75,7 +75,10 @@ The bottom of the panel shows the current freshness setting (`FIX < 90D`) and ho
 
 ## Related
 
-**Tide Display CYD** is a companion project for the same board. It draws an animated beach whose water line follows the real tide from NOAA predictions, with live waves, wind and water temperature from an NDBC buoy, the sun and moon at their real positions, and a 36-hour tide chart.
+Two companion projects run on the same board:
+
+- [Flight Tracker CYD](https://github.com/CaptD0nuts/Flight-Tracker-CYD), which this project was built from, shows nearby aircraft from the [adsb.lol](https://adsb.lol) feed on a radar scope, with the flight, route, airline, altitude and speed of the nearest one.
+- **Tide Display CYD** draws an animated beach whose water line follows the real tide from NOAA predictions, with live waves, wind and water temperature from an NDBC buoy, the sun and moon at their real positions, and a 36-hour tide chart.
 
 ## License
 
