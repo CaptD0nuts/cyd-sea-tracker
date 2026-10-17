@@ -88,6 +88,31 @@ static void distBearing(float lat2, float lon2, float &distNm, float &brgDeg) {
   if (brgDeg < 0) brgDeg += 360;
 }
 
+// Stream reader for the parser that sleeps (instead of spinning) while it
+// waits for network data, and so lets core 0's idle task feed the watchdog.
+struct YieldingReader {
+  Stream &st;
+  uint32_t timeoutMs;
+  int read() {
+    uint32_t t0 = millis();
+    for (;;) {
+      int c = st.read();
+      if (c >= 0) return c;
+      if (millis() - t0 >= timeoutMs) return -1;
+      vTaskDelay(1);
+    }
+  }
+  size_t readBytes(char *buf, size_t n) {
+    size_t i = 0;
+    while (i < n) {
+      int c = read();
+      if (c < 0) break;
+      buf[i++] = (char)c;
+    }
+    return i;
+  }
+};
+
 static int fetchFeed(uint32_t now) {
   WiFiClientSecure client;
   HTTPClient http;
@@ -114,12 +139,13 @@ static int fetchFeed(uint32_t now) {
   for (const char *k : {"name", "species", "length", "gender", "last_move_datetime", "is_published"}) fp[k] = true;
   fp["category_name"]["en"] = true;
 
+  YieldingReader rd{st, 20000};
   s_nRecent = s_nOld = 0;
   int seen = 0;
   const uint32_t recentCut = now - RECENT_DAYS * 86400UL;
   for (;;) {
     JsonDocument doc;
-    DeserializationError err = deserializeJson(doc, st, DeserializationOption::Filter(filter));
+    DeserializationError err = deserializeJson(doc, rd, DeserializationOption::Filter(filter));
     if (err) {
       Serial.printf("feed json after %d animals: %s\n", seen, err.c_str());
       http.end();
@@ -144,8 +170,9 @@ static int fetchFeed(uint32_t now) {
     }
     // Next element: a comma means another animal, the closing bracket ends the list.
     char sep = 0;
-    while (st.readBytes(&sep, 1) == 1 && sep != ',' && sep != ']') {}
+    while (rd.readBytes(&sep, 1) == 1 && sep != ',' && sep != ']') {}
     if (sep != ',') break;
+    vTaskDelay(1);  // let the idle task run even when data arrives faster than it parses
   }
   http.end();
   Serial.printf("feed: %d animals, %d recent + %d older kept\n", seen, s_nRecent, s_nOld);
